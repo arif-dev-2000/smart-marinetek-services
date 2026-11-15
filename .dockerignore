@@ -1,0 +1,15 @@
+node_modules
+dist
+dist-ssr
+.output
+.nitro
+.tanstack
+.vinxi
+.wrangler
+.lovable
+.env
+.env.*
+!.env.example
+*.log
+tunnel-links.txt
+.git
