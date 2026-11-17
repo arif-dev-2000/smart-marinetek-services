@@ -1,5 +1,14 @@
+import { existsSync, statSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { buildMailtoUrl, buildWhatsAppUrl, company, companyJsonLd, products } from "@/data/company";
+import {
+  buildMailtoUrl,
+  buildWhatsAppUrl,
+  company,
+  companyJsonLd,
+  pageHead,
+  products,
+} from "@/data/company";
 
 describe("Smart Marinetek company profile, support emails & WhatsApp director links", () => {
   it("exposes approved company details, logo path, support emails and director contacts", () => {
@@ -76,6 +85,48 @@ describe("Smart Marinetek company profile, support emails & WhatsApp director li
       "13869900567",
     ]) {
       expect(dump).not.toContain(forbidden);
+    }
+  });
+
+  it("builds OpenGraph and Twitter metadata with branded og-image.png and canonical URL", () => {
+    const head = pageHead("Mineral Sourcing & Global Trade", "Test desc", "/");
+    expect(head.links).toContainEqual({
+      rel: "canonical",
+      href: "https://smartmarinetek.com/",
+    });
+    expect(head.meta).toContainEqual({
+      property: "og:site_name",
+      content: "Smart Marinetek Services Private Limited",
+    });
+    expect(head.meta).toContainEqual({
+      property: "og:image",
+      content: "https://smartmarinetek.com/og-image.png?v=2",
+    });
+    expect(head.meta).toContainEqual({
+      property: "og:image:width",
+      content: "1200",
+    });
+    expect(head.meta).toContainEqual({
+      property: "og:image:height",
+      content: "630",
+    });
+    expect(head.meta).toContainEqual({
+      name: "twitter:image",
+      content: "https://smartmarinetek.com/og-image.png?v=2",
+    });
+  });
+
+  it("ships branded favicon and social preview icon assets in public/", () => {
+    const publicDir = resolve(process.cwd(), "public");
+    for (const asset of [
+      "favicon.ico",
+      "favicon-32x32.png",
+      "apple-touch-icon.png",
+      "og-image.png",
+    ]) {
+      const target = resolve(publicDir, asset);
+      expect(existsSync(target)).toBe(true);
+      expect(statSync(target).size).toBeGreaterThan(500);
     }
   });
 });

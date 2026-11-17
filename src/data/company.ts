@@ -15,7 +15,9 @@ export const company = {
   location: "Andhra Pradesh, India",
   established: "03 March 2020",
   establishedShort: "03-03-2020",
+  siteUrl: "https://smartmarinetek.com",
   logoPath: "/sms-logo.svg",
+  ogImagePath: "/og-image.png",
   mainSources: ["Quartz", "Barytes"],
   additionalCommodities: ["Red Chillies", "Indian Rice"],
   emails: [
@@ -78,6 +80,8 @@ export const companyJsonLd = {
   "@type": "Organization",
   name: company.name,
   alternateName: company.shortName,
+  url: company.siteUrl,
+  image: `${company.siteUrl}${company.ogImagePath}`,
   foundingDate: "2020-03-03",
   email: "info@smartmarinetek.com",
   address: {
@@ -318,16 +322,34 @@ export const process = [
 
 export function pageHead(title: string, description: string, path = "/") {
   const full = `${title} | ${company.shortName}`;
-  const origin = (import.meta.env["VITE_SITE_URL"] || "").replace(/\/+$/, "");
+  const origin = (import.meta.env["VITE_SITE_URL"] || company.siteUrl).replace(/\/+$/, "");
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  const canonicalUrl = `${origin}${normalizedPath}`;
+  const ogImageUrl = `${origin}${company.ogImagePath}?v=2`;
   return {
-    links: [{ rel: "canonical", href: `${origin}${path}` }],
+    links: [{ rel: "canonical", href: canonicalUrl }],
     meta: [
       { title: full },
       { name: "description", content: description },
+      { property: "og:site_name", content: company.name },
       { property: "og:title", content: full },
       { property: "og:description", content: description },
+      { property: "og:url", content: canonicalUrl },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: ogImageUrl },
+      { property: "og:image:secure_url", content: ogImageUrl },
+      { property: "og:image:type", content: "image/png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      {
+        property: "og:image:alt",
+        content:
+          "Smart Marinetek Services Private Limited — Quartz, Barytes & Global Commodity Exports",
+      },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: full },
+      { name: "twitter:description", content: description },
+      { name: "twitter:image", content: ogImageUrl },
     ],
   };
 }

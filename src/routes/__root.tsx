@@ -8,11 +8,10 @@ import {
   Scripts,
   type ErrorComponentProps,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { Header, Footer } from "@/components/site/layout";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
   return (
@@ -39,9 +38,6 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -76,12 +72,10 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
-    // Replace these placeholders with the app's name and description when first building the app.
-    // Each content route, / included, must still set its own head(). Never add og:image or
-    // twitter:image here: every page without its own would inherit the root's preview image.
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "theme-color", content: "#15322B" },
       {
         title:
           "Smart Marinetek Services Private Limited | Quartz, Barytes & Global Commodity Exports",
@@ -91,6 +85,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "Established 03-03-2020 in Andhra Pradesh, India. Main source exporter of Quartz and Barytes alongside Red Chillies, Indian Rice, and allied commodities.",
       },
+      { property: "og:site_name", content: "Smart Marinetek Services Private Limited" },
       {
         property: "og:title",
         content:
@@ -102,7 +97,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Established 03-03-2020 in Andhra Pradesh, India. Main source exporter of Quartz and Barytes alongside Red Chillies, Indian Rice, and allied commodities.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://smartmarinetek.com/og-image.png?v=2" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: "https://smartmarinetek.com/og-image.png?v=2" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -115,8 +112,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/sms-logo.svg", type: "image/svg+xml" },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/sms-logo.svg?v=2", type: "image/svg+xml" },
+      { rel: "icon", href: "/favicon-32x32.png?v=2", type: "image/png", sizes: "32x32" },
+      { rel: "icon", href: "/favicon.ico?v=2", sizes: "any" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png?v=2", sizes: "180x180" },
     ],
   }),
   shellComponent: RootShell,
